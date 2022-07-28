@@ -1,0 +1,1 @@
+# An elegant calculator for `Slack`
