@@ -17,15 +17,21 @@ slack_event_adapter = SlackEventAdapter(
 )
 
 
-def send_message(message: str, channel: str = "slack-bot"):
+def send_message(
+    message: str, attachments: list = [], channel: str = "slack-bot"
+):
     client.chat_postMessage(
         channel=channel,
         blocks=[
             {
                 "type": "section",
-                "text": {"type": "mrkdwn", "text": message},
+                "text": {
+                    "type": "mrkdwn",
+                    "text": message,
+                },
             }
         ],
+        attachments=attachments,
     )
 
 
@@ -47,13 +53,8 @@ def message(payload):
         print(json.dumps(payload))
         print(bot_id)
     else:
-        send_message(message="What do you need human?", channel=channel_id)
-
-
-if __name__ == "__main__":
-    test_buttons = {
-        "text": "Would you like to play a game?",
-        "attachments": [
+        message = "Would you like to play a game?"
+        attachments = [
             {
                 "text": "Choose a game to play",
                 "fallback": "You are unable to choose a game",
@@ -90,9 +91,13 @@ if __name__ == "__main__":
                     },
                 ],
             }
-        ],
-    }
-    client.chat_postMessage(channel="general", **test_buttons)
+        ]
+        send_message(
+            message=message, attachments=attachments, channel=channel_id
+        )
+
+
+if __name__ == "__main__":
     app.run(debug=True)
 
 
